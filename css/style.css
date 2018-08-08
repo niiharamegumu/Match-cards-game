@@ -1,0 +1,33 @@
+body{
+  background-color:#733F36;
+}
+div{
+  background-color: #405547;
+  height: 730px;
+  margin: 0 auto;
+  width: 97%;
+}
+div h2{
+  color: #fff;
+  padding: 10px 0 0;
+  margin: 0;
+  text-align: center;
+}
+table{
+  margin: 0 auto;
+}
+td.card{
+  border: 1px solid #00f;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: rgb(128, 128, 128) 5px 5px;
+  font-size: 36px;
+  height: 140px;
+  margin-left: 10px;
+  text-align: center;
+  width: 100px;
+}
+td.back{
+  background-image: url(../images/card.png);
+  background-size: 100px 140px;
+}
