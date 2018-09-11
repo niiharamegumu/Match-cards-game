@@ -2,92 +2,97 @@
 "use strict";
 
 
-	var
-	timer = NaN,
-	score = 0,
-	flipTimer,
-	prevCard,
-	startTime;
+var timer = NaN,
+  score = 0,
+  flipTimer,
+  prevCard,
+  startTime;
 
 
-// Used Fisher-Yates-shuffle.
-	Array.prototype.shuffle = function () {
-			var arrayLength = this.length;
-			while ( arrayLength ) {
-					var randomNum = Math.floor( Math.random() * arrayLength );
-					var tmp = this[--arrayLength];
-					this[arrayLength] = this[randomNum];
-					this[randomNum] = tmp;
-			}
-			return this;
-	};
+  // Used Fisher-Yates-shuffle.
+  Array.prototype.shuffle = function(){
+    var arrayLength = this.length;
+    while (arrayLength) {
+      var randomNum = Math.floor( Math.random() * arrayLength );
+      var tmp = this[--arrayLength];
+      this[arrayLength] = this[randomNum];
+      this[randomNum] = tmp;
+    }
+    return this;
+  };
 
+  // window onload function.
+  window.onload = function init(){
+    var table = document.getElementById('table');
+    var cards = [];
 
-	window.onload = function init(){
-			var table = document.getElementById("table");
+    for(var i = 1; i <= 10; i++){
+      cards.push(i, i);
+    }
 
-			var cards =[];
-			for(var i = 1; i <= 10; i++){
-					cards.push(i);
-					cards.push(i);
-			}
+    cards.shuffle();
 
-			cards.shuffle();
+    for(var trCount = 0; trCount < 4; trCount++){
+      var tr = document.createElement("tr");
+      for(var tdCount = 0; tdCount < 5; tdCount++){
+        var td = document.createElement("td");
+        td.className = "card back";
+        td.number = cards[trCount * 5 + tdCount];
+        td.onclick = flip;
+        tr.appendChild(td);
+      }
+      table.appendChild(tr);
+      }
 
-			for(var r = 0; r < 4; r++) {
-					var tr = document.createElement("tr");
-					for(var d = 0; d < 5; d++){
-						var td = document.createElement("td");
-						td.className = "card back";
-						td.number = cards[r * 5 + d];
-						td.onclick = flip;
-						tr.appendChild(td);
-					}
-					table.appendChild(tr);
-			}
-			startTime = new Date();
-			timer = setInterval(tick,1000);
-	};
+    startTime = new Date();
+    timer = setInterval(tick, 1000);
+  };
 
+  // elapsed time.
+  function tick(){
+    var nowTime = new Date();
+    var elapsedTime = Math.floor((nowTime.getTime() - startTime.getTime()) / 1000);
+    document.getElementById('time').textContent = elapsedTime;
+  }
 
-	function tick(){
-			var now = new Date();
-			var elapsed = Math.floor( (now.getTime() - startTime.getTime())/ 1000);
-			document.getElementById("time").textContent = elapsed;
-	}
+  //Card(td-element) click function.
+  function flip(e){
+    var clickSrc = e.target;
+    var clickSrcNumber = clickSrc.number;
 
+    if(flipTimer || clickSrc.textContent != ""){
+      return;
+    }
 
-	function flip(e){
-			var src = e.target;
-			if(flipTimer || src.textContent != ""){
-				return;
-		}
+    clickSrc.className = "card";
+    clickSrc.textContent = clickSrcNumber;
 
-	var num = src.number;
-	src.className = "card";
-	src.textContent = num;
+    if(prevCard == null){
+      prevCard = clickSrc;
+      return;
+    }
 
-	if(prevCard == null){
-			prevCard = src;
-			return;
-	}
+    if(prevCard.number == clickSrcNumber){
 
-	if(prevCard.number == num){
-			if(++score == 10){
-				clearInterval(timer);
-			}
-			prevCard = null;
-			clearTimeout(flipTimer);
-	}else{
-			flipTimer = setTimeout(function(){
-					src.className = "card back";
-					src.textContent = "";
-					prevCard.className = "card back";
-					prevCard.textContent ="";
-					prevCard = null;
-					flipTimer = NaN;
-			},1000);
-	}
-}
+      if(++score == 10){
+        clearInterval(timer);
+        alert("Congratulation!!");
+      }
+      prevCard = null;
+      clearTimeout(flipTimer);
+
+    }else{
+      flipTimer = setTimeout(function(){
+        clickSrc.className = "card back";
+        clickSrc.textContent = "";
+        prevCard.className = "card back";
+        prevCard.textContent = "";
+        prevCard = null;
+        flipTimer = NaN;
+      }, 1000);
+    }
+
+  }
+
 
 }());
