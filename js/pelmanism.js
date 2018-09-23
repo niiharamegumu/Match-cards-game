@@ -2,29 +2,39 @@
 "use strict";
 
 
-var timer = NaN,
-  score = 0,
-  flipTimer,
-  prevCard,
-  startTime;
+	var
+		timer = NaN,
+	  score = 0,
+	  flipTimer,
+	  prevCard,
+		randomNum,
+	  startTime,
+		nowTime,
+		elapsedTime,
+		elapsedMin,
+		elapsedSec,
+		cards = [];
 
 
   // Used Fisher-Yates-shuffle.
   Array.prototype.shuffle = function(){
-    var arrayLength = this.length;
-    while (arrayLength) {
-      var randomNum = Math.floor( Math.random() * arrayLength );
-      var tmp = this[--arrayLength];
-      this[arrayLength] = this[randomNum];
-      this[randomNum] = tmp;
-    }
-    return this;
+		var
+			len = this.length - 1,
+			tmp,
+			j;
+
+		for(var i = len; i > 0; i--){
+			j = Math.floor(Math.random() * (i + 1));
+			tmp = this[i];
+			this[i] = this[j];
+			this[j] = tmp;
+		}
+		return this;
   };
 
   // window onload function.
   window.onload = function init(){
     var table = document.getElementById('table');
-    var cards = [];
 
     for(var i = 1; i <= 10; i++){
       cards.push(i, i);
@@ -32,12 +42,12 @@ var timer = NaN,
 
     cards.shuffle();
 
-    for(var trCount = 0; trCount < 4; trCount++){
+    for(i = 0; i < 4; i++){
       var tr = document.createElement("tr");
-      for(var tdCount = 0; tdCount < 5; tdCount++){
+      for(var j = 0; j < 5; j++){
         var td = document.createElement("td");
         td.className = "card back";
-        td.number = cards[trCount * 5 + tdCount];
+        td.number = cards[i * 5 + j];
         td.onclick = flip;
         tr.appendChild(td);
       }
@@ -50,9 +60,12 @@ var timer = NaN,
 
   // elapsed time.
   function tick(){
-    var nowTime = new Date();
-    var elapsedTime = Math.floor((nowTime.getTime() - startTime.getTime()) / 1000);
-    document.getElementById('time').textContent = elapsedTime;
+    nowTime = new Date();
+    elapsedTime = (nowTime.getTime() - startTime.getTime());
+    elapsedSec = ("0" + Math.floor((elapsedTime / 1000) % 60)).slice(-2);
+    elapsedMin = ("0" + Math.floor((elapsedTime / 1000) / 60)).slice(-2);
+    document.getElementById("min").textContent = elapsedMin;
+    document.getElementById("sec").textContent = elapsedSec;
   }
 
   //Card(td-element) click function.
